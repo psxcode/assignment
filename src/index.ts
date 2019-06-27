@@ -1,52 +1,14 @@
 import lineStream from './line-stream'
-
-type Point = [number, number]
-type Segment = [Point, Point]
-
-const parseStartPosition = (line: string) => {
-  return line.split(' ').map((chunk) => parseInt(chunk, 10)) as Point
-}
-
-const parseCommand = (line: string): Point => {
-  const [direction, lengthStr] = line.split(' ')
-  const length = parseInt(lengthStr, 10)
-
-  switch (direction) {
-  case 'N':
-    return [0, length]
-  case 'E':
-    return [length, 0]
-  case 'S':
-    return [0, -length]
-  case 'W':
-    return [-length, 0]
-  default:
-    throw new Error(`Unknown direction ${direction}`)
-  }
-}
-
-const getSegmentLength = ([pt0, pt1]: Segment): number => {
-  if (pt0[0] === pt1[0]) {
-    return Math.abs(pt0[1] - pt1[1]) + 1
-  } else {
-    return Math.abs(pt0[0] - pt1[0]) + 1
-  }
-}
-
-const addPoints = (pt0: Point, pt1: Point): Point => {
-  return [pt0[0] + pt1[0], pt0[1] + pt1[1]]
-}
-
-const subtractSegment = (a: Segment, b: Segment): Segment[] => {
-  const result: Segment[] = []
-
-  return result
-}
+import { Segment, Vec2D } from './types'
+import { parseStartPosition, parseCommand, parseNumCommands } from './parse'
+import { addVectors, multiplyVectorByScalar, getPointsInSegment, isPointInsideSegment } from './vector'
 
 const main = () => {
   let lineIndex = 0
-  let position: Point
-  let cleanSegments: Segment[] = []
+  let position: Vec2D
+  let expectedNumCommands = 0
+  let cleanedPoints = 0
+  const allSegments: Segment[] = []
 
   process.stdin
     .pipe(lineStream())
@@ -55,30 +17,49 @@ const main = () => {
 
       switch (lineIndex) {
       case 0:
+        expectedNumCommands = parseNumCommands(line)
         break
       case 1:
         position = parseStartPosition(line)
+        allSegments.push([position, position])
         break
 
       default: {
-        const offset = parseCommand(line)
-        const nextSegment: Segment = [position, addPoints(position, offset)]
-        const nextSegments: Segment[] = []
+        const { direction, length } = parseCommand(line)
 
-        for (const seg of cleanSegments) {
-          nextSegments.push(...subtractSegment(seg, nextSegment))
+        if (length === 0) {
+          return
         }
 
-        nextSegments.push(nextSegment)
-        cleanSegments = nextSegments
+        const nextSegment: Segment = [
+          addVectors(position, direction),
+          addVectors(position, multiplyVectorByScalar(direction, length)),
+        ]
+
+        for (const point of getPointsInSegment(nextSegment)) {
+          for (const segment of allSegments) {
+            if (!isPointInsideSegment(segment, point)) {
+              // clean point
+              ++cleanedPoints
+            }
+          }
+        }
+
+        allSegments.push(nextSegment)
         position = nextSegment[1]
       }
       }
 
       ++lineIndex
+
+      if (lineIndex > expectedNumCommands + 2) {
+        console.log('end of commands')
+        console.log('=> Cleaned:', cleanedPoints)
+        process.exit(0)
+      }
     })
     .on('end', () => {
-      console.log(cleanSegments.map(getSegmentLength))
+      console.log('=> Cleaned:', cleanedPoints)
     })
 }
 
