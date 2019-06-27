@@ -3,7 +3,9 @@
   "license": "MIT",
   "author": "psxcode <psxcode@gmail.com> (https://github.com/psxcode)",
   "scripts": {
-    "test": "printf \"2\n10 22\nE 2\nN 1\" | node -r ./register.js ./src"
+    "run": "printf \"2\n10 22\nE 2\nN 1\nN 1\" | node -r ./register.js ./src",
+    "cover": "NODE_ENV=test nyc mocha './test/*.spec.ts'",
+    "test": "NODE_ENV=test mocha --require register.js './test/*.spec.ts'"
   },
   "engines": {
     "node": ">=8"

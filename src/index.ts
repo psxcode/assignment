@@ -1,7 +1,7 @@
 import lineStream from './line-stream'
 import { Segment, Vec2D } from './types'
 import { parseStartPosition, parseCommand, parseNumCommands } from './parse'
-import { addVectors, multiplyVectorByScalar, getPointsInSegment, isPointInsideSegment } from './vector'
+import { getPointsInSegment, isPointInsideSegment, getNextSegment } from './vector'
 
 const main = () => {
   let lineIndex = 0
@@ -31,10 +31,7 @@ const main = () => {
           return
         }
 
-        const nextSegment: Segment = [
-          addVectors(position, direction),
-          addVectors(position, multiplyVectorByScalar(direction, length)),
-        ]
+        const nextSegment = getNextSegment(position, direction, length)
 
         for (const point of getPointsInSegment(nextSegment)) {
           for (const segment of allSegments) {
@@ -52,7 +49,7 @@ const main = () => {
 
       ++lineIndex
 
-      if (lineIndex > expectedNumCommands + 2) {
+      if (lineIndex > expectedNumCommands + 3) {
         console.log('end of commands')
         console.log('=> Cleaned:', cleanedPoints)
         process.exit(0)
