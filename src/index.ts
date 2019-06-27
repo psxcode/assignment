@@ -37,22 +37,16 @@ const addPoints = (pt0: Point, pt1: Point): Point => {
   return [pt0[0] + pt1[0], pt0[1] + pt1[1]]
 }
 
-const subtractTile = (segments: Segment[], subtract: Segment): Segment[] => {
-  // const result: Segment[] = []
+const subtractSegment = (a: Segment, b: Segment): Segment[] => {
+  const result: Segment[] = []
 
-  // for (const segment of segments) {
-
-  // }
-
-  // return result
-
-  return segments
+  return result
 }
 
 const main = () => {
   let lineIndex = 0
   let position: Point
-  let cleanTiles: Segment[] = []
+  let cleanSegments: Segment[] = []
 
   process.stdin
     .pipe(lineStream())
@@ -69,10 +63,14 @@ const main = () => {
       default: {
         const offset = parseCommand(line)
         const nextSegment: Segment = [position, addPoints(position, offset)]
+        const nextSegments: Segment[] = []
 
-        cleanTiles = subtractTile(cleanTiles, nextSegment)
-        cleanTiles.push(nextSegment)
+        for (const seg of cleanSegments) {
+          nextSegments.push(...subtractSegment(seg, nextSegment))
+        }
 
+        nextSegments.push(nextSegment)
+        cleanSegments = nextSegments
         position = nextSegment[1]
       }
       }
@@ -80,7 +78,7 @@ const main = () => {
       ++lineIndex
     })
     .on('end', () => {
-      console.log(cleanTiles.map(getSegmentLength))
+      console.log(cleanSegments.map(getSegmentLength))
     })
 }
 
