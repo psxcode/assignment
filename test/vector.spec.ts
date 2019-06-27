@@ -100,6 +100,15 @@ describe('Get Points Inside Segment', () => {
       { x: 3, y: -3 },
     ])
   })
+
+  it('should handler single point segment', () => {
+    const segment: Segment = [{ x: 3, y: 2 }, { x: 3, y: 2 }]
+    const points = Array.from(getPointsInSegment(segment))
+
+    expect(points).deep.eq([
+      { x: 3, y: 2 },
+    ])
+  })
 })
 
 describe('Get Next Segment', () => {
@@ -117,11 +126,11 @@ describe('Get Next Segment', () => {
   it('should get next segment', () => {
     const position = { x: 3, y: 10 }
     const direction = { x: 0, y: 1 }
-    const length = 5
+    const length = 1
 
     expect(getNextSegment(position, direction, length)).deep.eq([
       { x: 3, y: 11 },
-      { x: 3, y: 15 },
+      { x: 3, y: 11 },
     ])
   })
 })

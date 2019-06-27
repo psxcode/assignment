@@ -8,7 +8,11 @@ const main = () => {
   let position: Vec2D
   let expectedNumCommands = 0
   let cleanedPoints = 0
-  const allSegments: Segment[] = []
+  const cleanSegments: Segment[] = []
+
+  const printResults = () => {
+    console.log(`=> Cleaned: ${cleanedPoints}`)
+  }
 
   process.stdin
     .pipe(lineStream())
@@ -19,9 +23,16 @@ const main = () => {
       case 0:
         expectedNumCommands = parseNumCommands(line)
         break
+
       case 1:
+
+        // move to position
         position = parseStartPosition(line)
-        allSegments.push([position, position])
+
+        // clean starting point
+        cleanSegments.push([position, position])
+        ++cleanedPoints
+
         break
 
       default: {
@@ -34,29 +45,38 @@ const main = () => {
         const nextSegment = getNextSegment(position, direction, length)
 
         for (const point of getPointsInSegment(nextSegment)) {
-          for (const segment of allSegments) {
-            if (!isPointInsideSegment(segment, point)) {
-              // clean point
-              ++cleanedPoints
+          let shouldClean = true
+
+          // move robot to position
+          position = point
+
+          // check if point was cleaned before
+          for (const segment of cleanSegments) {
+            if (isPointInsideSegment(segment, position)) {
+              shouldClean = false
+              break
             }
+          }
+
+          if (shouldClean) {
+            // clean point
+            ++cleanedPoints
           }
         }
 
-        allSegments.push(nextSegment)
-        position = nextSegment[1]
+        cleanSegments.push(nextSegment)
       }
       }
 
       ++lineIndex
 
-      if (lineIndex > expectedNumCommands + 3) {
-        console.log('end of commands')
-        console.log('=> Cleaned:', cleanedPoints)
+      if (lineIndex > expectedNumCommands + 2) {
+        printResults()
         process.exit(0)
       }
     })
     .on('end', () => {
-      console.log('=> Cleaned:', cleanedPoints)
+      printResults()
     })
 }
 
