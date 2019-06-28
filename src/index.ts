@@ -3,7 +3,7 @@ import { Segment, Vec2D } from './types'
 import { parseStartPosition, parseCommand, parseNumCommands } from './parse'
 import { getPointsInSegment, isPointInsideSegment, getNextSegment } from './vector'
 
-const main = () => {
+const main = (inStream: NodeJS.ReadStream, outStream: NodeJS.WriteStream) => {
   let lineIndex = 0
   let position: Vec2D
   let expectedNumCommands = 0
@@ -11,10 +11,10 @@ const main = () => {
   const cleanSegments: Segment[] = []
 
   const printResults = () => {
-    console.log(`=> Cleaned: ${cleanedPoints}`)
+    outStream.write(`=> Cleaned: ${cleanedPoints}\n`)
   }
 
-  process.stdin
+  inStream
     .pipe(lineStream())
     .on('data', (chunk: Buffer) => {
       const line = chunk.toString('utf8')
@@ -80,4 +80,4 @@ const main = () => {
     })
 }
 
-main()
+main(process.stdin, process.stdout)
