@@ -14,7 +14,7 @@ RUN yarn install
 
 COPY . .
 
-RUN yarn build
+RUN yarn test && yarn build
 
 FROM node:8
 

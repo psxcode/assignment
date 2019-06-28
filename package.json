@@ -36,6 +36,8 @@
     "eslint": "^6.0.1",
     "eslint-plugin-import": "^2.17.3",
     "mocha": "^6.1.4",
+    "node-on": "^0.2.2",
+    "node-stream-test": "^0.3.11",
     "nyc": "^14.1.1",
     "rimraf": "^2.6.3",
     "rollup": "^1.16.2",

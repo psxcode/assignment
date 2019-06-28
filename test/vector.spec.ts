@@ -10,7 +10,7 @@ import {
 } from '../src/vector'
 import { Vec2D, Segment } from '../src/types'
 
-describe('Add Vectors', () => {
+describe('[ Add Vectors ]', () => {
   it('should add two vectors', () => {
     const v0: Vec2D = { x: 0,y: 3 }
     const v1: Vec2D = { x: 2, y: -1 }
@@ -19,7 +19,7 @@ describe('Add Vectors', () => {
   })
 })
 
-describe('Multiply Vector by Scalar', () => {
+describe('[ Multiply Vector by Scalar ]', () => {
   it('should multiply vector by scalar', () => {
     const v0: Vec2D = { x: 2, y: 3 }
     const scalar = 3
@@ -28,7 +28,7 @@ describe('Multiply Vector by Scalar', () => {
   })
 })
 
-describe('Normalize Vector', () => {
+describe('[ Normalize Vector ]', () => {
   it('should normalize vector', () => {
     const v0: Vec2D = { x: 0, y: 7 }
 
@@ -42,7 +42,7 @@ describe('Normalize Vector', () => {
   })
 })
 
-describe('Is Point Inside Segment', () => {
+describe('[ Is Point Inside Segment ]', () => {
   it('should report point inside', () => {
     const segment: Segment = [{ x: 0, y: 0 }, { x: 5, y: 0 }]
     const point: Vec2D = { x: 2, y: 0 }
@@ -72,7 +72,7 @@ describe('Is Point Inside Segment', () => {
   })
 })
 
-describe('Get Points Inside Segment', () => {
+describe('[ Get Points Inside Segment ]', () => {
   it('should return all point inside segment', () => {
     const segment: Segment = [{ x: 0, y: 0 }, { x: 5, y: 0 }]
     const points = Array.from(getPointsInSegment(segment))
@@ -111,7 +111,7 @@ describe('Get Points Inside Segment', () => {
   })
 })
 
-describe('Get Next Segment', () => {
+describe('[ Get Next Segment ]', () => {
   it('should get next segment', () => {
     const position = { x: 22, y: 10 }
     const direction = { x: -1, y: 0 }

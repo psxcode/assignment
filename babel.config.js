@@ -29,7 +29,6 @@ module.exports = function (api) {
             targets: {
               node: '8',
             },
-            modules: false,
           },
         ],
         '@babel/preset-typescript',
